@@ -11,7 +11,7 @@ class Map
 {
 public:
 	[[nodiscard]]
-	static constexpr bool IsInMapBounds( glm::ivec2 coords )
+	static constexpr bool IsInBounds( glm::ivec2 coords )
 	{
 		return coords.x >= 0 && coords.x < c_mapWidthCells && coords.y >= 0 && coords.y < c_mapHeightCells;
 	}

@@ -12,23 +12,9 @@ static constexpr SDL_Color c_floorColor = { 30, 9, 13, 255 };
 static constexpr SDL_Color c_ceilingColor = { 24, 49, 167, 255 };
 static constexpr SDL_Color c_wallColor = { 218, 36, 36, 255 };
 
-GameplayRenderer::GameplayRenderer( const GameplayController& controller, const Map& map )
-	: m_controller( controller )
-	, m_map( map )
+static void RenderFloor()
 {
-	SDL_SetRenderLogicalPresentation( Game::GetInstance().GetRenderer(), c_gameWidthPixels, c_gameHeightPixels, SDL_LOGICAL_PRESENTATION_LETTERBOX );
-}
-
-void GameplayRenderer::Render()
-{
-	RenderCeiling();
-	RenderFloor();
-	RenderMap();
-}
-
-void GameplayRenderer::RenderFloor()
-{
-	static constexpr SDL_FRect rect = {
+	static constexpr SDL_FRect c_rect = {
 		.x = 0.0f,
 		.y = static_cast<float>( c_gameHeightPixels ) * 0.5f,
 		.w = c_gameWidthPixels,
@@ -37,12 +23,12 @@ void GameplayRenderer::RenderFloor()
 
 	SDL_Renderer* const renderer = Game::GetInstance().GetRenderer();
 	SDL_SetRenderDrawColor( renderer, c_floorColor.r, c_floorColor.g, c_floorColor.b, c_floorColor.a );
-	SDL_RenderFillRect( renderer, &rect );
+	SDL_RenderFillRect( renderer, &c_rect );
 }
 
-void GameplayRenderer::RenderCeiling()
+static void RenderCeiling()
 {
-	static constexpr SDL_FRect rect = {
+	static constexpr SDL_FRect c_rect = {
 		.x = 0.0f,
 		.y = 0.0f,
 		.w = c_gameWidthPixels,
@@ -51,16 +37,30 @@ void GameplayRenderer::RenderCeiling()
 
 	SDL_Renderer* const renderer = Game::GetInstance().GetRenderer();
 	SDL_SetRenderDrawColor( renderer, c_ceilingColor.r, c_ceilingColor.g, c_ceilingColor.b, c_ceilingColor.a );
-	SDL_RenderFillRect( renderer, &rect );
+	SDL_RenderFillRect( renderer, &c_rect );
 }
 
-void GameplayRenderer::RenderMap()
+GameplayRenderer::GameplayRenderer( const GameplayController& controller, const Map& map )
+	: m_controller( controller )
+	, m_map( map )
 {
+	SDL_SetRenderLogicalPresentation( Game::GetInstance().GetRenderer(), c_gameWidthPixels, c_gameHeightPixels, SDL_LOGICAL_PRESENTATION_LETTERBOX );
+}
+
+void GameplayRenderer::Render() const
+{
+	RenderCeiling();
+	RenderFloor();
+	RenderMap();
+}
+
+void GameplayRenderer::RenderMap() const
+{
+	SDL_Renderer* const renderer = Game::GetInstance().GetRenderer();
+
 	const glm::vec2 position = m_controller.GetPosition();
 	const float angle = m_controller.GetAngle();
 	const float headHeight = m_controller.GetHeadHeight();
-
-	SDL_Renderer* const renderer = Game::GetInstance().GetRenderer();
 
 	float angleDelta = -c_horizontalFov * 0.5f;
 	for ( int32_t i = 0; i < c_gameWidthPixels; ++i )

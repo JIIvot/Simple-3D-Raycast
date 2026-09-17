@@ -61,6 +61,6 @@ private:
 
 	SDL_MouseButtonFlags m_currButtonFlags = 0;
 	SDL_MouseButtonFlags m_lastButtonFlags = 0;
-	glm::vec2 m_mousePosition = glm::vec2( 0.0f );
+	glm::vec2 m_mousePosition = { 0.0f, 0.0f };
 	float m_mouseScrollDelta = 0.0f;
 };

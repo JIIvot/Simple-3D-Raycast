@@ -20,36 +20,7 @@ static constexpr SDL_Color c_cellColors[eCellType_Count] = {
 	{ 218, 36, 36, 255 } // Wall
 };
 
-EditorRenderer::EditorRenderer( const EditorController& controller, const Map& map )
-	: m_controller( controller )
-	, m_map( map )
-{
-	SDL_SetRenderLogicalPresentation( Game::GetInstance().GetRenderer(), c_editorWidthPixels, c_editorHeightPixels, SDL_LOGICAL_PRESENTATION_LETTERBOX );
-}
-
-void EditorRenderer::Render() const
-{
-	RenderBackground();
-	RenderMapCells();
-	RenderPlayerSpawn();
-
-	if ( !m_controller.IsMousePositionValid() )
-	{
-		RenderGrid();
-		return;
-	}
-
-	if ( m_controller.HasRaysEnabled() )
-	{
-		RenderRays();
-		return;
-	}
-
-	RenderHoveredCell();
-	RenderGrid();
-}
-
-void EditorRenderer::RenderBackground()
+static void RenderBackground()
 {
 	SDL_Renderer* const renderer = Game::GetInstance().GetRenderer();
 
@@ -57,7 +28,7 @@ void EditorRenderer::RenderBackground()
 	SDL_RenderFillRect( renderer, nullptr );
 }
 
-void EditorRenderer::RenderGrid()
+static void RenderGrid()
 {
 	SDL_Renderer* const renderer = Game::GetInstance().GetRenderer();
 	SDL_SetRenderDrawColor( renderer, c_gridColor.r, c_gridColor.g, c_gridColor.b, c_gridColor.a );
@@ -87,6 +58,35 @@ void EditorRenderer::RenderGrid()
 	}
 }
 
+EditorRenderer::EditorRenderer( const EditorController& controller, const Map& map )
+	: m_controller( controller )
+	, m_map( map )
+{
+	SDL_SetRenderLogicalPresentation( Game::GetInstance().GetRenderer(), c_editorWidthPixels, c_editorHeightPixels, SDL_LOGICAL_PRESENTATION_LETTERBOX );
+}
+
+void EditorRenderer::Render() const
+{
+	RenderBackground();
+	RenderMapCells();
+	RenderPlayerSpawn();
+
+	if ( !m_controller.IsMousePositionValid() )
+	{
+		RenderGrid();
+		return;
+	}
+
+	if ( m_controller.HasRaysEnabled() )
+	{
+		RenderRays();
+		return;
+	}
+
+	RenderHoveredCell();
+	RenderGrid();
+}
+
 void EditorRenderer::RenderMapCells() const
 {
 	glm::ivec2 coords;
@@ -105,8 +105,8 @@ void EditorRenderer::RenderHoveredCell() const
 	const SDL_FRect rect = {
 		.x = static_cast<float>( hoveredCoords.x * c_cellSizePixels ),
 		.y = static_cast<float>( hoveredCoords.y * c_cellSizePixels ),
-		.w = static_cast<float>( c_cellSizePixels ),
-		.h = static_cast<float>( c_cellSizePixels )
+		.w = c_cellSizePixels,
+		.h = c_cellSizePixels
 	};
 
 	SDL_Renderer* const renderer = Game::GetInstance().GetRenderer();
@@ -126,8 +126,8 @@ void EditorRenderer::RenderCell( glm::ivec2 coords ) const
 	const SDL_FRect rect = {
 		.x = static_cast<float>( coords.x * c_cellSizePixels ),
 		.y = static_cast<float>( coords.y * c_cellSizePixels ),
-		.w = static_cast<float>( c_cellSizePixels ),
-		.h = static_cast<float>( c_cellSizePixels )
+		.w = c_cellSizePixels,
+		.h = c_cellSizePixels
 	};
 
 	SDL_Renderer* const renderer = Game::GetInstance().GetRenderer();

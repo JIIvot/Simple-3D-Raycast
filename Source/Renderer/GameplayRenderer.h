@@ -8,14 +8,10 @@ class GameplayRenderer
 public:
 	GameplayRenderer( const GameplayController& controller, const Map& map );
 
-	void Render();
+	void Render() const;
 
 private:
-	void RenderFloor();
-
-	void RenderCeiling();
-
-	void RenderMap();
+	void RenderMap() const;
 
 private:
 	const GameplayController& m_controller;

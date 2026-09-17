@@ -4,7 +4,7 @@
 #include <glm/gtx/norm.hpp>
 #include <cmath>
 
-static constexpr int32_t c_rayLengthCells = 100;
+static constexpr int32_t c_rayLengthCells = 50;
 
 Ray Map::CastRay( glm::vec2 startPosition, float angleDeg ) const
 {
@@ -63,7 +63,7 @@ Ray Map::CastRay( glm::vec2 startPosition, float angleDeg ) const
 			coords.y += coordStep.y;
 		}
 
-		ray.isHit = !IsInMapBounds( coords ) || GetCellType( coords ) != eCellType_None;
+		ray.isHit = !IsInBounds( coords ) || GetCellType( coords ) != eCellType_None;
 		++cellsVisited;
 	}
 

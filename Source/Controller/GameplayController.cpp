@@ -75,7 +75,7 @@ void GameplayController::ProcessInput()
 		m_targetAngle += c_angleRotateAmount;
 	}
 
-	/* Rotate counter clock wise action (D) */
+	/* Rotate counter clock wise action (Q) */
 	if ( input.IsKeyJustPressed( SDL_SCANCODE_Q ) )
 	{
 		m_targetAngle -= c_angleRotateAmount;
@@ -130,8 +130,8 @@ void GameplayController::UpdateTargetCoords()
 	}
 
 	const int32_t direction = std::lround( NormalizeAngle( m_targetAngle ) / 90.0f );
-
 	glm::ivec2 desiredCoords = m_targetCoords;
+
 	switch ( direction )
 	{
 	case 0:
@@ -155,7 +155,7 @@ void GameplayController::UpdateTargetCoords()
 		break;
 	}
 
-	if ( m_map.IsInMapBounds( desiredCoords ) && m_map.GetCellType( desiredCoords ) == eCellType_None )
+	if ( Map::IsInBounds( desiredCoords ) && m_map.GetCellType( desiredCoords ) == eCellType_None )
 	{
 		m_targetCoords = desiredCoords;
 	}

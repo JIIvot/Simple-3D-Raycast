@@ -13,10 +13,6 @@ public:
 	void Render() const;
 
 private:
-	static void RenderBackground();
-
-	static void RenderGrid();
-
 	void RenderMapCells() const;
 
 	void RenderHoveredCell() const;
